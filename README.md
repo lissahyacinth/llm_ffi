@@ -18,7 +18,7 @@ def parse_legacy_format(data: str) -> dict[str, str]:
 
 Run it, and it works.
 
-## Two Modes
+## Three Modes
 
 **Normal mode** (default): Generate code files in advance
 ```bash
@@ -32,6 +32,15 @@ LLM_FFI_DANGER_MODE=true python mymodule.py
 ```
 
 With runtime generation code is generated on first call, cached in memory, and cleared on restart.
+
+**More danger mode**: Generate and execute fresh code on every function call
+```bash
+LLM_FFI_MORE_DANGER_MODE=true python mymodule.py
+```
+
+This takes precedence over saved implementations and both in-memory implementation caches.
+It works independently of `LLM_FFI_DANGER_MODE` and never saves or caches the generated code.
+Every call is a new opportunity to make no mistakes.
 
 ## Installation
 
@@ -180,8 +189,11 @@ MAX_TOKENS=4096                       # Optional (default shown)
 
 Environment variables:
 ```bash
-LLM_FFI_DANGER_MODE=true             # Enable runtime generation
+LLM_FFI_DANGER_MODE=true             # Enable cached runtime generation
+LLM_FFI_MORE_DANGER_MODE=true        # Generate and execute fresh code on every call
 LLM_FFI_MODEL=claude-sonnet-4-5-20250929  # Override model (optional)
 ```
+
+Both danger-mode flags accept `true`, `1`, or `yes` (case-insensitive).
 
 Currently supports Claude models via Anthropic API. Support for other LLM providers might be added.
